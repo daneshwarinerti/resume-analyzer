@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Analysis Results</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Resume Analysis</h1>
+
+        <!-- Score Circle -->
+        <div class="card score-card">
+            <h2>Resume Score</h2>
+            <div class="score-wrapper">
+                <canvas id="scoreChart" width="150" height="150"></canvas>
+            </div>
+        </div>
+
+        <!-- Skills Found -->
+        <div class="card">
+            <h2>Skills Found</h2>
+            <ul>
+                {% for skill in skills %}
+                    <li>✔ {{ skill }}</li>
+                {% else %}
+                    <li>No skills found</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Missing Skills -->
+        <div class="card">
+            <h2>Missing Skills</h2>
+            <ul>
+                {% for skill in missing %}
+                    <li>⚠ {{ skill }}</li>
+                {% else %}
+                    <li>None</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="card">
+            <h2>Suggestions</h2>
+            <ul>
+                {% for tip in suggestions %}
+                    <li>💡 {{ tip }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <a href="/" class="back-btn">Upload Another Resume</a>
+    </div>
+
+    <!-- Chart.js Gauge -->
+    <script>
+        const score = {{ score }};
+        const ctx = document.getElementById('scoreChart').getContext('2d');
+        const color = score >= 80 ? '#27ae60' : score >= 50 ? '#f1c40f' : '#e74c3c';
+
+        const chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Score', 'Remaining'],
+                datasets: [{
+                    data: [score, 100 - score],  // Directly use final values
+                    backgroundColor: [color, '#ecf0f1'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: false,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }
+                },
+                animation: {
+                    animateRotate: true,  // Smoothly rotates
+                    animateScale: true,   // Smooth pop-in
+                    duration: 1500        // Runs only once
+                }
+            },
+            plugins: [{
+                afterDraw: chart => {
+                    const { ctx, width } = chart;
+                    ctx.save();
+                    ctx.font = 'bold 16px Poppins';
+                    ctx.fillStyle = '#2C3E50';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(score + '/100', width / 2, width / 2 + 5);
+                }
+            }]
+        });
+    </script>
+</body>
+</html>
+

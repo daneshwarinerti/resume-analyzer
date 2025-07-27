@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Analyzer</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Resume Analyzer</h1>
+        <p class="subtitle">Upload your PDF resume to analyze skills and get a score.</p>
+
+        <!-- Drag & Drop Zone -->
+        <form action="/analyze" method="POST" enctype="multipart/form-data" id="uploadForm">
+            <div class="upload-box" id="dropZone">
+                <img src="https://img.icons8.com/ios-filled/100/3498db/upload-to-cloud.png" alt="Upload Icon">
+                <p>Drag & Drop your resume here<br>or</p>
+                <input type="file" name="resume" accept="application/pdf" required>
+                <button type="submit">Analyze Resume</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Drag & Drop Highlighting
+        const dropZone = document.getElementById('dropZone');
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.background = '#d6eaf8';
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.style.background = '#ecf0f1';
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.background = '#ecf0f1';
+            const fileInput = dropZone.querySelector('input[type="file"]');
+            fileInput.files = e.dataTransfer.files;
+        });
+    </script>
+</body>
+</html>
+
+
